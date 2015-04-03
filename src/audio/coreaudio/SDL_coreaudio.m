@@ -542,9 +542,14 @@ COREAUDIO_Init(SDL_AudioDriverImpl * impl)
        You can change this at runtime in your own code if you need different
        behavior.  If this is common, we can add an SDL hint for this.
     */
-    AudioSessionInitialize(NULL, NULL, NULL, nil);
-    UInt32 category = kAudioSessionCategory_AmbientSound;
-    AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(UInt32), &category);
+    //The AudioSession API has been completely deprecated in iOS 7.0. Using AVAudioSession instead
+    NSError* error = [NSError alloc];
+    AVAudioSession* aas = [AVAudioSession sharedInstance];
+    [aas setCategory:AVAudioSessionCategoryPlayback
+         withOptions:AVAudioSessionCategoryOptionDuckOthers
+               error:&error];
+    [aas setMode:AVAudioSessionModeDefault error:&error];
+    [aas setActive: YES error: &error];
 #endif
 
     impl->ProvidesOwnCallbackThread = 1;

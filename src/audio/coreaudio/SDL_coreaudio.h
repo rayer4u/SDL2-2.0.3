@@ -34,6 +34,7 @@
 #include <CoreServices/CoreServices.h>
 #else
 #include <AudioToolbox/AudioToolbox.h>
+#import <AVFoundation/AVFoundation.h>
 #endif
 
 #include <AudioUnit/AudioUnit.h>
