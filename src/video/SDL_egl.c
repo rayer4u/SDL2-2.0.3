@@ -306,6 +306,16 @@ SDL_EGL_ChooseConfig(_THIS)
     
     attribs[i++] = EGL_NONE;
    
+#ifdef __ANDROID__
+    #in some android device(such as sumsung android 4.3 device).the config choosed are not right. color is wrong
+    if (_this->egl_data->eglChooseConfig(_this->egl_data->egl_display,
+        attribs,
+        &_this->egl_data->egl_config, 1,
+        &found_configs) == EGL_FALSE ||
+        found_configs == 0) {
+        return SDL_SetError("Couldn't find matching EGL config");
+    }
+#else
     if (_this->egl_data->eglChooseConfig(_this->egl_data->egl_display,
         attribs,
         configs, SDL_arraysize(configs),
@@ -344,7 +354,8 @@ SDL_EGL_ChooseConfig(_THIS)
            
         if (bitdiff == 0) break; /* we found an exact match! */
     }
-    
+#endif
+
     return 0;
 }
 
